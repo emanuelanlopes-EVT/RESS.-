@@ -6,6 +6,9 @@ import {defineConfig, loadEnv} from 'vite';
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   return {
+    // Caminho base no GitHub Pages: https://<user>.github.io/RESS.-/
+    // (trocar para '/' se um dia usar domínio próprio)
+    base: '/RESS.-/',
     plugins: [react(), tailwindcss()],
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
