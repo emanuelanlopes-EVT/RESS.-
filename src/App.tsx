@@ -99,7 +99,7 @@ export default function App() {
             transition={{ delay: 0.8, duration: 1 }}
             className="text-brand-sage/80 font-light tracking-[0.2em] text-sm md:text-lg mb-12 uppercase"
           >
-            Timeless urban elegance
+            Feito no deserto
           </motion.p>
 
           <motion.button
