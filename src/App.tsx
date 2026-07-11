@@ -7,6 +7,10 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronDown, Instagram, MessageCircle, Send, CheckCircle2, ArrowRight } from 'lucide-react';
 
+// Base URL do Vite (fica '/RESS.-/' no GitHub Pages, '/' em domínio próprio)
+const BASE = (import.meta as any).env?.BASE_URL ?? '/';
+const asset = (p: string) => `${BASE}${p}`;
+
 // Reusable Components
 const FadeIn = ({ children, delay = 0, duration = 0.8 }: { children: React.ReactNode; delay?: number; duration?: number }) => (
   <motion.div
@@ -34,7 +38,7 @@ export default function App() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormState('submitting');
-    
+
     const formData = new FormData(e.currentTarget);
     const data = {
       "Nome": formData.get("name"),
@@ -55,7 +59,7 @@ export default function App() {
         },
         body: JSON.stringify(data)
       });
-      
+
       if (response.ok) {
         setFormState('success');
       } else {
@@ -78,7 +82,7 @@ export default function App() {
       <section className="relative h-screen flex flex-col items-center justify-center bg-brand-dark overflow-hidden px-6 text-center">
         {/* Subtle texture/gradient */}
         <div className="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent"></div>
-        
+
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -88,7 +92,7 @@ export default function App() {
           <h1 className="text-6xl md:text-8xl lg:text-9xl font-serif text-brand-sage tracking-widest mb-6">
             RESS.
           </h1>
-          
+
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -104,10 +108,10 @@ export default function App() {
             whileHover="hover"
             variants={{
               hidden: { opacity: 0, y: 20 },
-              visible: { 
-                opacity: 1, 
-                y: 0, 
-                transition: { delay: 1.2, duration: 0.8, ease: "easeOut" } 
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: { delay: 1.2, duration: 0.8, ease: "easeOut" }
               },
               hover: {}
             }}
@@ -127,11 +131,11 @@ export default function App() {
                 <ArrowRight className="w-4 h-4" />
               </motion.div>
             </div>
-            
+
             {/* The "Running Line" */}
             <div className="relative w-full h-[1px] overflow-hidden">
               <div className="absolute inset-0 bg-white/10" />
-              <motion.div 
+              <motion.div
                 className="absolute inset-0 bg-white"
                 variants={{
                   hidden: { x: "-101%" },
@@ -155,40 +159,51 @@ export default function App() {
         </motion.div>
       </section>
 
-      {/* 2. MANIFESTO */}
-      <section className="py-24 md:py-48 bg-white overflow-hidden px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="max-w-4xl mx-auto text-center space-y-12">
+      {/* 2. MANIFESTO — texto + editorial do concreto */}
+      <section className="py-24 md:py-40 bg-white overflow-hidden px-6">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
+          {/* Texto */}
+          <div className="space-y-10 order-2 md:order-1">
             <FadeIn>
               <p className="text-[10px] tracking-[0.6em] uppercase text-black/40">Manifesto</p>
             </FadeIn>
-            
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1, delay: 0.2 }}
-              className="space-y-10"
-            >
-              <h2 className="text-4xl md:text-6xl font-serif text-black leading-[1.1] text-balance">
+            <FadeIn delay={0.1}>
+              <h2 className="text-3xl md:text-5xl font-serif text-black leading-[1.1] text-balance">
                 A RESS. não fabrica para o mercado.
                 <span className="block mt-4 italic font-light">Fabrica para quem foi chamado a vestir com intenção.</span>
               </h2>
-              
-              <div className="w-24 h-[1px] bg-black/20 mx-auto"></div>
-
-              <div className="space-y-8">
-                <p className="text-xl md:text-2xl font-light text-black/60 leading-relaxed italic text-balance">
-                  Não existe estoque de intenção. Por isso cada peça da RESS. é produzida sob encomenda para quem já decidiu que vale a espera.
-                </p>
-
-                <p className="text-lg font-medium text-black tracking-wide uppercase text-[12px] opacity-80 border-t-2 md:border-t-0 md:border-l-2 border-black pt-6 md:pt-0 md:pl-6 inline-block">
-                  Somos uma marca cristã.<br />
-                  Nossa estética é silêncio, nossa mensagem é presença.
-                </p>
-              </div>
-            </motion.div>
+            </FadeIn>
+            <FadeIn delay={0.2}>
+              <div className="w-24 h-[1px] bg-black/20"></div>
+            </FadeIn>
+            <FadeIn delay={0.3}>
+              <p className="text-lg md:text-xl font-light text-black/60 leading-relaxed italic text-balance">
+                Não existe estoque de intenção. Por isso cada peça da RESS. é produzida sob encomenda para quem já decidiu que vale a espera.
+              </p>
+            </FadeIn>
+            <FadeIn delay={0.4}>
+              <p className="text-[12px] font-medium text-black tracking-wide uppercase opacity-80 border-l-2 border-black pl-6 inline-block">
+                Somos uma marca cristã.<br />
+                Nossa estética é silêncio, nossa mensagem é presença.
+              </p>
+            </FadeIn>
           </div>
+
+          {/* Imagem */}
+          <motion.div
+            initial={{ opacity: 0, scale: 1.05 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2, ease: 'easeOut' }}
+            className="order-1 md:order-2 relative aspect-[4/5] overflow-hidden bg-brand-dark"
+          >
+            <img
+              src={asset('images/manifesto-deserto.jpg')}
+              alt="Editorial RESS. — coleção Deserto"
+              className="absolute inset-0 w-full h-full object-cover"
+              loading="lazy"
+            />
+          </motion.div>
         </div>
       </section>
 
@@ -229,7 +244,75 @@ export default function App() {
         </div>
       </section>
 
-      {/* 4. FORMULÁRIO DE ENTRADA — Lista VIP */}
+      {/* 4. EDITORIAL — dois públicos */}
+      <section className="py-24 md:py-40 bg-brand-dark px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16 md:mb-24">
+            <FadeIn>
+              <p className="text-[10px] tracking-[0.6em] uppercase text-white/40 mb-6">Coleção Deserto</p>
+            </FadeIn>
+            <FadeIn delay={0.1}>
+              <h2 className="text-3xl md:text-5xl font-serif text-white text-balance">
+                Feito para quem carrega propósito.
+              </h2>
+            </FadeIn>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            {[
+              { img: 'images/publico-tennis.jpg', label: 'A quadra' },
+              { img: 'images/publico-executivo.jpg', label: 'O escritório' },
+            ].map((it, i) => (
+              <motion.div
+                key={it.img}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1, delay: i * 0.15, ease: 'easeOut' }}
+                className="group relative aspect-[4/5] overflow-hidden bg-black"
+              >
+                <img
+                  src={asset(it.img)}
+                  alt={`RESS. — ${it.label}`}
+                  loading="lazy"
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                <p className="absolute bottom-6 left-6 text-[11px] tracking-[0.4em] uppercase text-white/90">{it.label}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 5. DESERTO — imagem cinematográfica */}
+      <section className="relative h-[90vh] md:h-screen w-full overflow-hidden bg-brand-dark">
+        <motion.img
+          src={asset('images/deserto.jpg')}
+          alt="RESS. — Deserto"
+          initial={{ scale: 1.1 }}
+          whileInView={{ scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.8, ease: 'easeOut' }}
+          className="absolute inset-0 w-full h-full object-cover"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/30" />
+        <div className="absolute inset-0 flex flex-col items-center justify-end text-center px-6 pb-20 md:pb-28">
+          <FadeIn>
+            <p className="text-[10px] md:text-xs tracking-[0.5em] uppercase text-white/70 mb-6">
+              Todo processo gera desconforto
+            </p>
+          </FadeIn>
+          <FadeIn delay={0.15}>
+            <h2 className="text-3xl md:text-6xl font-serif text-white text-balance max-w-3xl leading-[1.15]">
+              O deserto existe para forjar você.
+            </h2>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* 6. FORMULÁRIO DE ENTRADA — Lista VIP */}
       <section id="vip-form" className="relative py-24 md:py-40 bg-brand-dark px-6 overflow-hidden">
         {/* Monogram Watermark */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
@@ -243,7 +326,7 @@ export default function App() {
                 Solicite seu acesso.
               </h2>
               <p className="text-white/70 font-light text-sm md:text-base leading-relaxed">
-                Faça parte do grupo seleto que recebe acesso antecipado às próximas produções RESS. 
+                Faça parte do grupo seleto que recebe acesso antecipado às próximas produções RESS.
                 Vagas limitadas por série de produção.
               </p>
             </FadeIn>
@@ -256,7 +339,7 @@ export default function App() {
             className="bg-white/5 backdrop-blur-sm p-8 md:p-12 border border-white/10"
           >
             {formState === 'success' ? (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 className="text-center py-10"
@@ -340,21 +423,21 @@ export default function App() {
         </div>
       </section>
 
-      {/* 5. FILOSOFIA / PROCESSO */}
+      {/* 7. FILOSOFIA / PROCESSO */}
       <section className="py-24 md:py-40 bg-white px-6">
         <div className="max-w-2xl mx-auto text-center space-y-12">
           <FadeIn>
             <div className="space-y-8">
               <p className="text-2xl md:text-4xl font-serif italic text-black/60 leading-relaxed">
-                Todo processo gera desconforto.
+                O deserto não é o fim.
               </p>
               <p className="text-xl md:text-2xl font-light text-black/40">
-                O deserto existe para forjar você.
+                É a preparação para o destino.
               </p>
             </div>
-            
+
             <div className="w-12 h-[1px] bg-black/10 mx-auto my-12"></div>
-            
+
             <div className="space-y-4 text-xs md:text-sm uppercase tracking-[0.6em] text-black/30 font-medium">
               <p>Resista.</p>
               <p>Ressignifique.</p>
@@ -366,7 +449,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* 6. RODAPÉ */}
+      {/* 8. RODAPÉ */}
       <footer className="py-16 bg-white border-t border-black/5 px-6">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
           <div className="text-center md:text-left">
