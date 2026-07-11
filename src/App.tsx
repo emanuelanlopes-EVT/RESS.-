@@ -89,9 +89,13 @@ export default function App() {
           transition={{ duration: 1.5, ease: "easeOut" }}
           className="relative z-10"
         >
-          <h1 className="text-6xl md:text-8xl lg:text-9xl font-serif text-brand-sage tracking-widest mb-6">
-            RESS.
-          </h1>
+          <img
+            src={asset('images/ress-wordmark.png')}
+            alt="RESS."
+            className="w-[240px] md:w-[400px] lg:w-[500px] mx-auto mb-6 select-none"
+            draggable={false}
+          />
+          <h1 className="sr-only">RESS.</h1>
 
           <motion.p
             initial={{ opacity: 0 }}
