@@ -11,6 +11,13 @@ import { ChevronDown, Instagram, MessageCircle, Send, CheckCircle2, ArrowRight }
 const BASE = (import.meta as any).env?.BASE_URL ?? '/';
 const asset = (p: string) => `${BASE}${p}`;
 
+// Frases da experiência de entrada — "A Travessia"
+const THRESHOLD_PHRASES = [
+  'Todo processo gera desconforto.',
+  'Poucos atravessam.',
+  'Você foi chamado.',
+];
+
 // Reusable Components
 const FadeIn = ({ children, delay = 0, duration = 0.8 }: { children: React.ReactNode; delay?: number; duration?: number }) => (
   <motion.div
@@ -26,6 +33,8 @@ const FadeIn = ({ children, delay = 0, duration = 0.8 }: { children: React.React
 export default function App() {
   const [formState, setFormState] = useState<'idle' | 'submitting' | 'success'>('idle');
   const [isScrolled, setIsScrolled] = useState(false);
+  const [threshold, setThreshold] = useState(false);
+  const [step, setStep] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -76,6 +85,43 @@ export default function App() {
     document.getElementById('vip-form')?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const openThreshold = () => {
+    setStep(0);
+    setThreshold(true);
+  };
+
+  const finishThreshold = () => {
+    setThreshold(false);
+    window.setTimeout(() => {
+      document.getElementById('vip-form')?.scrollIntoView({ behavior: 'smooth' });
+    }, 80);
+  };
+
+  // Avança as frases automaticamente; ao fim, revela o formulário
+  useEffect(() => {
+    if (!threshold) return;
+    if (step >= THRESHOLD_PHRASES.length) {
+      finishThreshold();
+      return;
+    }
+    const t = window.setTimeout(() => setStep((s) => s + 1), 2200);
+    return () => window.clearTimeout(t);
+  }, [threshold, step]);
+
+  // Trava o scroll do fundo e permite sair com ESC durante a experiência
+  useEffect(() => {
+    if (!threshold) return;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') finishThreshold();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [threshold]);
+
   return (
     <div className="selection:bg-white/30 selection:text-black overflow-x-hidden">
       {/* 1. HERO */}
@@ -119,7 +165,7 @@ export default function App() {
               },
               hover: {}
             }}
-            onClick={scrollToVip}
+            onClick={openThreshold}
             className="group mt-6 relative flex flex-col items-center gap-3 text-white/90 transition-colors w-fit mx-auto"
           >
             <div className="flex items-center gap-3 text-[10px] md:text-xs tracking-[0.4em] uppercase font-medium">
@@ -495,6 +541,59 @@ export default function App() {
               className="w-full bg-black text-white py-4 text-[10px] tracking-[0.4em] uppercase font-bold border border-white/30 shadow-2xl backdrop-blur-md"
             >
               Lista VIP
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Experiência de entrada — A Travessia */}
+      <AnimatePresence>
+        {threshold && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.7, ease: 'easeInOut' }}
+            onClick={() => setStep((s) => s + 1)}
+            className="fixed inset-0 z-[100] bg-brand-dark flex flex-col items-center justify-center px-8 text-center cursor-pointer overflow-hidden"
+          >
+            {/* Monograma fantasma ao fundo */}
+            <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none text-[24rem] md:text-[40rem] font-serif text-white/[0.03] select-none leading-none">
+              R.
+            </span>
+
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={step}
+                initial={{ opacity: 0, y: 24, filter: 'blur(6px)' }}
+                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                exit={{ opacity: 0, y: -24, filter: 'blur(6px)' }}
+                transition={{ duration: 0.9, ease: 'easeOut' }}
+                className="relative z-10 text-3xl md:text-5xl lg:text-6xl font-serif text-white text-balance max-w-3xl leading-[1.15]"
+              >
+                {THRESHOLD_PHRASES[Math.min(step, THRESHOLD_PHRASES.length - 1)]}
+              </motion.p>
+            </AnimatePresence>
+
+            {/* Linha de progresso da travessia */}
+            <div className="absolute bottom-16 left-1/2 -translate-x-1/2 w-40 h-[1px] bg-white/10 overflow-hidden">
+              <motion.div
+                className="h-full bg-white/60"
+                initial={{ width: '0%' }}
+                animate={{ width: `${(Math.min(step + 1, THRESHOLD_PHRASES.length) / THRESHOLD_PHRASES.length) * 100}%` }}
+                transition={{ duration: 0.6, ease: 'easeOut' }}
+              />
+            </div>
+
+            {/* Pular */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                finishThreshold();
+              }}
+              className="absolute bottom-7 left-1/2 -translate-x-1/2 text-[9px] tracking-[0.4em] uppercase text-white/30 hover:text-white/70 transition-colors"
+            >
+              Pular
             </button>
           </motion.div>
         )}
