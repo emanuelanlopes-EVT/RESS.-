@@ -335,31 +335,18 @@ export default function App() {
         </div>
       </section>
 
-      {/* 5. DESERTO — imagem cinematográfica */}
-      <section className="relative h-[90vh] md:h-screen w-full overflow-hidden bg-brand-dark">
+      {/* 5. EDITORIAL DE CAMPANHA — imagem inteira (texto embutido na arte) */}
+      <section className="w-full bg-brand-dark overflow-hidden">
         <motion.img
-          src={asset('images/deserto.jpg')}
-          alt="RESS. — Deserto"
-          initial={{ scale: 1.1 }}
-          whileInView={{ scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.8, ease: 'easeOut' }}
-          className="absolute inset-0 w-full h-full object-cover"
+          src={asset('images/campanha-jardim.jpg')}
+          alt="RESS. — Built different. Made to last."
+          initial={{ opacity: 0, scale: 1.04 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 1.4, ease: 'easeOut' }}
+          className="block w-full h-auto"
           loading="lazy"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/30" />
-        <div className="absolute inset-0 flex flex-col items-center justify-end text-center px-6 pb-20 md:pb-28">
-          <FadeIn>
-            <p className="text-[10px] md:text-xs tracking-[0.5em] uppercase text-white/70 mb-6">
-              Todo processo gera desconforto
-            </p>
-          </FadeIn>
-          <FadeIn delay={0.15}>
-            <h2 className="text-3xl md:text-6xl font-serif text-white text-balance max-w-3xl leading-[1.15]">
-              O deserto existe para forjar você.
-            </h2>
-          </FadeIn>
-        </div>
       </section>
 
       {/* 6. FORMULÁRIO DE ENTRADA — Lista VIP */}
